@@ -10,10 +10,15 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^7.0.0",
+    "@fortawesome/free-brands-svg-icons": "^7.0.0",
+    "@fortawesome/free-regular-svg-icons": "^7.0.0",
+    "@fortawesome/free-solid-svg-icons": "^7.0.0",
+    "@fortawesome/vue-fontawesome": "^3.1.1",
     "@nuxt/content": "3.8.0",
     "@nuxt/eslint": "1.10.0",
     "@nuxt/ui": "4.1.0",
-    "@tailwindcss/vite": "^4.1.16",
+    "@unocss/reset": "^66.5.4",
     "better-sqlite3": "^12.4.1",
     "eslint": "^9.39.1",
     "nuxt": "^4.2.0",
@@ -22,9 +27,14 @@
     "vue-router": "^4.6.3"
   },
   "devDependencies": {
+    "@unocss/nuxt": "^66.5.4",
     "eslint-plugin-vue": "^10.5.1",
     "typescript-eslint": "^8.46.3",
+    "unocss": "^66.5.4",
     "vue-eslint-parser": "^10.2.0"
   },
-  "packageManager": "pnpm@10.8.1"
+  "packageManager": "pnpm@10.8.1",
+  "imports": {
+    "#unocss": "./app/assets/css/main.css"
+  }
 }

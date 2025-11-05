@@ -38,6 +38,7 @@ export default withNuxt([
     rules: {
       quotes: ['error', 'single'],
       semi: ['error', 'never'],
+      'vue/multi-word-component-names': 'off',
     },
   },
 ]);
