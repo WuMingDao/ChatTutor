@@ -28,13 +28,17 @@ export const createAgent = (options: AgentOptions) => {
       getActionTools(options.pages)
     ])).flat()
     options.messages.push(message.user(input))
-    const { fullStream } = streamText({
+    const { fullStream, messages } = streamText({
       model: options.model,
       apiKey: options.apiKey,
       baseURL: options.baseURL,
       messages: options.messages,
       tools,
       maxSteps: 15,
+    })
+    messages.then(ms => {
+      options.messages.length = 0
+      options.messages.push(...ms)
     })
     for await (const chunk of <ReadableStream<StreamTextEvent>>fullStream) {
       if (chunk.type === 'text-delta') {

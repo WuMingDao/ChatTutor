@@ -16,6 +16,7 @@
   "dependencies": {
     "@chat-tutor/agent": "workspace:*",
     "@chat-tutor/canvas": "workspace:*",
+    "@chat-tutor/shared": "workspace:*",
     "@fortawesome/fontawesome-svg-core": "^7.0.0",
     "@fortawesome/free-brands-svg-icons": "^7.0.0",
     "@fortawesome/free-regular-svg-icons": "^7.0.0",
@@ -40,7 +41,8 @@
     "typescript": "^5.9.3",
     "vue": "^3.5.22",
     "vue-renderer-markdown": "0.0.61-beta.7",
-    "vue-router": "^4.6.3"
+    "vue-router": "^4.6.3",
+    "xsai": "0.4.0-beta.8"
   },
   "devDependencies": {
     "@types/pg": "^8.15.6",
