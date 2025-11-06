@@ -28,11 +28,12 @@ export const useChat = (
       content: i,
       id: crypto.randomUUID(),
     })
-    messages.value.push({
+    const add = () => messages.value.push({
       type: 'assistant',
       content: '',
       id: crypto.randomUUID(),
     })
+    let divided: boolean = true
     
     eventSource = new EventSource(`/api/chat/${id}?input=${i}`)
     
@@ -40,9 +41,14 @@ export const useChat = (
       try {
         const data = JSON.parse(event.data) as AllAction
         console.log(data)
+        if (divided) {
+          add()
+          divided = false
+        }
         if (data.type === 'text') {
           messages.value.at(-1)!.content += (<TextChunkAction>data).options.chunk
         } else {
+          divided = true
           handleAction(<FullAction>data)
         }
       } catch (error) {

@@ -39,16 +39,23 @@ export default defineEventHandler(async (event) => {
     pages,
   })
   const stream = createEventStream(event)
+  const addAsistant = () => messages.push({
+    type: 'assistant',
+    content: '',
+    id: crypto.randomUUID(),
+  })
+  let divided: boolean = true
   event.waitUntil((async () => {
-    messages.push({
-      type: 'assistant',
-      content: '',
-      id: crypto.randomUUID(),
-    })
+    if (divided) {
+      addAsistant()
+      divided = false
+    }
     for await (const chunk of agent(input)) {
       stream.push(JSON.stringify(chunk))
       if (chunk.type === 'text') {
         messages.at(-1)!.content += chunk.options.chunk
+      } else {
+        divided = true
       }
     }
   })().then(async () => {
