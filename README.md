@@ -149,6 +149,6 @@ Our sponsors are listed as follows (in no particular order):
 [![Star History Chart](https://api.star-history.com/svg?repos=sheepbox8646/ChatTutor&type=date&legend=top-left)](https://www.star-history.com/#sheepbox8646/ChatTutor&type=date&legend=top-left)
 
 ---
-**MIT License**
+**AGPL v3 License**
 
 *Copyright (c) 2025 Acbox, All rights reserved.*

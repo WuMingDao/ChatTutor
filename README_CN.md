@@ -150,6 +150,6 @@ docker compose up -d
 [![Star History Chart](https://api.star-history.com/svg?repos=sheepbox8646/ChatTutor&type=date&legend=top-left)](https://www.star-history.com/#sheepbox8646/ChatTutor&type=date&legend=top-left)
 
 ---
-**MIT 许可证**
+**AGPL v3 License**
 
 *版权  (c) 2025 Acbox, 保留所有权利。*
