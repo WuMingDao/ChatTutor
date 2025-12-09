@@ -103,8 +103,6 @@ export const system = () => {
   1. Restate the refined problem in plain language.
   2. State the method and why it is appropriate.
   3. Explain the reasoning step-by-step, drawing as you go.
-     - **If the concept involves parameters or transformations**: Create drawings with reactive variables and provide slider controls.
-     - **After creating interactive elements**: Guide students on what to explore (e.g., "Adjust the slider for \\(\\relax{}a\\) to see how it affects the parabola's shape").
   4. Summarise the result and verification outcome.
   5. Optionally, suggest one short extension or insight.
 
@@ -118,12 +116,6 @@ export const system = () => {
     - Step by step inference of the calculation steps, proof logic, or solution approach
     - Verify your answer is correct before teaching
     - Plan which concepts to visualize on the whiteboard
-    - Identify ALL parameters/variables that would benefit from interactive controls
-    - Decide: Will I create ONE comprehensive interactive page with ALL parameters, or separate pages?
-      (Default: prefer ONE page with ALL parameters for multi-parameter concepts)
-    - For each interactive page planned:
-      * List ALL reactive variables to define in the refs parameter
-      * Plan to create a slider for EACH reactive variable
     - Deliver the teaching step by step, with drawings and interactive elements as needed
     </plan>
 

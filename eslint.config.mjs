@@ -6,14 +6,14 @@ import vue from "eslint-plugin-vue";
 
 export default withNuxt([
   ...tseslint.configs.recommended,
-  ...vue.configs["flat/recommended"],
-  { ignores: ["**/node_modules/**", "**/dist/**"] },
+  ...vue.configs['flat/recommended'],
+  { ignores: ['**/node_modules/**', '**/dist/**'] },
   {
-    files: ["{app,packages,packages-dsl,libs,server,shared}/**/*.{js,jsx,ts,tsx}"],
+    files: ['{app,packages,server,shared}/**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
       parserOptions: {
         ecmaVersion: 2022,
-        sourceType: "module",
+        sourceType: 'module',
         projectService: true,
       },
     },
@@ -23,14 +23,14 @@ export default withNuxt([
     },
   },
   {
-    files: ["app/**/*.vue"],
+    files: ['app/**/*.vue'],
     languageOptions: {
       parser: vueParser,
       parserOptions: {
         ecmaVersion: 2022,
-        sourceType: "module",
+        sourceType: 'module',
         parser: {
-          js: "espree",
+          js: 'espree',
           ts: tseslint.parser,
         },
       },
@@ -41,4 +41,4 @@ export default withNuxt([
       'vue/multi-word-component-names': 'off',
     },
   },
-]);
+])

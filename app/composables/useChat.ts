@@ -20,7 +20,7 @@ export const useChat = (
   const id = params.id as string
   let eventSource: EventSource | null = null
 
-  const { baseURL, apiKey, agentModel, painterModel } = useSettings()
+  const { baseURL, apiKey, agentModel } = useSettings()
 
   const send = async () => {
     running.value = true
@@ -46,7 +46,6 @@ export const useChat = (
       apiKey: apiKey.value,
       baseURL: baseURL.value,
       agentModel: agentModel.value,
-      painterModel: painterModel.value,
     }
     
     eventSource = new EventSource(`/api/chat/${id}?${new URLSearchParams(query).toString()}`)

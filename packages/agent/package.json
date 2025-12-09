@@ -11,11 +11,7 @@
   },
   "packageManager": "pnpm@10.8.1",
   "dependencies": {
-    "@chat-tutor/canvas": "workspace:*",
     "@chat-tutor/shared": "workspace:*",
-    "@dsl/math": "workspace:*",
-    "@dsl/knowledge": "workspace:*",
-    "@dsl/x": "workspace:*",
     "@types/node": "^24.10.0",
     "arktype": "^2.1.25",
     "dotenv": "^17.2.3",

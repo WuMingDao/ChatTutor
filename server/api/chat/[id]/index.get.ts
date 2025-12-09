@@ -34,13 +34,11 @@ export default defineEventHandler(async (event) => {
     apiKey?: string,
     baseURL?: string,
     agentModel?: string,
-    painterModel?: string,
   }
   const { input, images: imagesString } = query
   const apiKey = resolveValue(query.apiKey, process.env.API_KEY!)
   const baseURL = resolveValue(query.baseURL, process.env.BASE_URL!)
   const agentModel = resolveValue(query.agentModel, process.env.AGENT_MODEL!)
-  const painterModel = resolveValue(query.painterModel, resolveValue(query.agentModel, process.env.PAINTER_MODEL!))
   const isDev = process.env.NODE_ENV === 'development'
 
   let images = imagesString ? imagesString.split(',').filter(Boolean) : []
@@ -63,7 +61,6 @@ export default defineEventHandler(async (event) => {
   }
 
   context.agent ??= []
-  context.painter ??= {}
 
   updateStatus(Status.RUNNING)
   messages.push({
@@ -79,12 +76,6 @@ export default defineEventHandler(async (event) => {
     model: agentModel,
     messages: context.agent,
     pages,
-    painter: {
-      apiKey,
-      baseURL,
-      model: painterModel,
-      messages: context.painter,
-    },
   })
   const stream = createEventStream(event)
   const resolve = createMessageResolver(

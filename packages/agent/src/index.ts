@@ -1,6 +1,5 @@
-import { message, streamText, type Message } from 'xsai'
+import { message, streamText } from 'xsai'
 import { agent } from './prompts'
-import { getAgentTools } from './tools'
 import type { Action, FullAction, Page } from '@chat-tutor/shared'
 import type { ReadableStream } from 'node:stream/web'
 import type { AgentChunker, BaseAgentOptions } from './types'
@@ -12,12 +11,6 @@ export type PageNoteAction = FullAction<{ content: string }, 'note'>
 
 export interface AgentOptions extends BaseAgentOptions {
   pages: Page[]
-  painter: {
-    apiKey: string
-    baseURL: string
-    model: string
-    messages: Record<string, Message[]>
-  }
 }
 
 export const createAgent = (options: AgentOptions) => {
@@ -76,7 +69,6 @@ export const createAgent = (options: AgentOptions) => {
 }
 
 export * from './tools'
-export * from './painter'
 export * from './types'
 export * from './title'
 export * from './utils'

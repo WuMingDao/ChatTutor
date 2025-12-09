@@ -1,10 +1,7 @@
-import type { CanvasPage } from '@chat-tutor/canvas'
-import type { BaseForm, FormType, FullAction } from '@chat-tutor/shared'
-import type { FormCreationAction, PageCreationAction, PageNoteAction, MermaidPage, MermaidPageAction, GGBPage } from '@chat-tutor/agent'
+import type { FullAction } from '@chat-tutor/shared'
+import type { PageCreationAction, MermaidPage, GGBPage } from '@chat-tutor/agent'
 
-import '@dsl/math'
-
-export type Page = CanvasPage | MermaidPage | GGBPage
+export type Page = MermaidPage | GGBPage
 
 export type ActionHandler = (action: FullAction) => void
 
@@ -13,7 +10,6 @@ export const useBoard = () => {
   const board = ref<HTMLElement | null>(null)
   const currentPages = ref<Page[]>([])
   const page = ref<string | null>(null)
-  const forms = ref<BaseForm<FormType>[]>([])
 
   const loadPage = (p: Page) => {
     console.log('loadPage', p)
@@ -35,13 +31,12 @@ export const useBoard = () => {
   }
 
   const handlePageCreationAction = (action: PageCreationAction) => {
-    loadPage(action.options as CanvasPage)
+    loadPage(action.options as Page)
   }
 
   return {
     board,
     page,
-    forms,
     currentPages,
     handleAction,
     loadPage,

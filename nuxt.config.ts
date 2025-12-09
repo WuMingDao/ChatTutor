@@ -7,7 +7,6 @@ export default defineNuxtConfig({
     '@/assets/css/main.css',
     '@/assets/css/markdown.css',
     'katex/dist/katex.min.css',
-    '@dsl/theme-default/styles/main.css',
   ],
   app: {
     head: {
@@ -21,7 +20,6 @@ export default defineNuxtConfig({
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         {
-          hid: 'description',
           name: 'description',
           content: 'ChatTutor：基于 AI 的对话式学习平台，支持数学公式渲染与可视化，提供个性化辅导与交互式练习。'
         },

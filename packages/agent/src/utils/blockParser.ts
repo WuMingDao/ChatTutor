@@ -107,7 +107,6 @@ export const createBlockParser = ({ pages, emit, emitText }: BlockParserOptions)
         type,
         steps: [],
         notes: [],
-        forms: [],
       }
       pages.push(page)
       emit({

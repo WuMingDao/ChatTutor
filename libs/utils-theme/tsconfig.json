@@ -1,4 +1,0 @@
-{
-  "extends": "../../packages-dsl/tsconfig.base.json",
-  "include": ["src"]
-}

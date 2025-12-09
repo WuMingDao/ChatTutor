@@ -5,7 +5,7 @@ const input = ref('')
 const running = ref(false)
 const resources = ref<Resource[]>([])
 
-const { baseURL, apiKey, agentModel, painterModel } = useSettings()
+const { baseURL, apiKey, agentModel } = useSettings()
 
 const create = async () => {
   running.value = true
@@ -14,7 +14,6 @@ const create = async () => {
     apiKey: apiKey.value,
     baseURL: baseURL.value,
     agentModel: agentModel.value,
-    painterModel: painterModel.value,
   }
   const { id } = await $fetch<{ id: string }>(`/api/chat/create?${new URLSearchParams(query).toString()}`, {
     method: 'POST',

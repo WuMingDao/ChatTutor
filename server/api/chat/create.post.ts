@@ -24,7 +24,6 @@ export default defineEventHandler(async (event) => {
       messages: [],
       context: {
         agent: [],
-        painter: {},
       } satisfies Context,
       status: Status.PENDING,
       pages: [],
