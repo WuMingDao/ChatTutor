@@ -14,7 +14,7 @@ export default defineNuxtConfig({
       titleTemplate: '%s · ChatTutor',
       htmlAttrs: { lang: 'zh-CN' },
       script: [
-        { src: '/deployggb.js', type: 'text/javascript', defer: true },
+        { src: 'https://www.geogebra.org/apps/deployggb.js', type: 'text/javascript', defer: true },
       ],
       meta: [
         { charset: 'utf-8' },
