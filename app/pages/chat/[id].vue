@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { v4 } from 'uuid'
 
-const { handleAction, loadPages, currentPages, page, notes } = useBoard()
+const { handleAction, loadPages, currentPages, page } = useBoard()
 const { messages, input, resources, send, loadMessages, running } = useChat(handleAction)
 const promptAreaRef = ref()
 
 provide('page', page)
+
+console.log('currentPages', currentPages)
 
 const route = useRoute()
 const { input: initialInput, images: initialImages } = route.query as { input: string, images: string }
@@ -59,7 +61,6 @@ onMounted(() => {
         <Pages
           :pages="currentPages"
           :current-page="page!"
-          :notes="notes"
         />
       </div>
       <div class="w-full h-20 md:h-auto max-w-screen-md justify-center flex flex-col gap-5">

@@ -5,11 +5,22 @@ import { PageType } from '@chat-tutor/shared'
 const props = defineProps<{
   pages: Page[]
   currentPage: string
-  notes: string[]
 }>()
 
-// const currentPage = computed(() => props.pages.find(page => page.id === props.currentPage)!)
+const notes = ref<string[]>([])
+
+const _currentPage = computed(() => props.pages.find(page => page.id === props.currentPage)!)
 console.log(props)
+
+watch(_currentPage, (page) => {
+  if (!page || !page.steps) return
+  notes.value.length = 0
+  for (const step of page.steps) {
+    if (step.type === 'note') {
+      notes.value.push(step.options.content)
+    }
+  }
+}, { immediate: true, deep: true })
 
 const areaClasses = 'size-full shadow-sm dark:text-gray-200 bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg'
 </script>

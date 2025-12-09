@@ -1,8 +1,9 @@
 import type { Action, FullAction, Page } from '@chat-tutor/shared'
 import type { PageCreationAction } from '@chat-tutor/agent'
-import type { MermaidPage } from '@chat-tutor/mermaid'
+import type { MermaidPage } from './mermaid'
 import { mermaidBlockResolver } from './mermaid'
 import { noteBlockResolver } from './note'
+import { ggbBlockResolver } from './ggb'
 
 export type BlockResolver = (context: {
   page: Page
@@ -24,7 +25,7 @@ type BlockMeta = {
 }
 
 const fenceStart = '```'
-const blockStart = /^```\s*(mermaid|note)\s*\[([^\]\s|;]+)(?:;([^\]]+))?\](?:\|([^\n`]+))?[\t ]*(?:\r?\n)?/m
+const blockStart = /^```\s*(mermaid|note|ggbscript)\s*\[([^\]\s|;]+)(?:;([^\]]+))?\](?:\|([^\n`]+))?[\t ]*(?:\r?\n)?/m
 const blockEnd = /^```[\t ]*(?:\r?\n)?/
 
 export const createBlockParser = ({ pages, emit, emitText }: BlockParserOptions) => {
@@ -32,6 +33,7 @@ export const createBlockParser = ({ pages, emit, emitText }: BlockParserOptions)
 
   blockResolvers.set('mermaid', mermaidBlockResolver)
   blockResolvers.set('note', noteBlockResolver)
+  blockResolvers.set('ggbscript', ggbBlockResolver)
   let buffer = ''
   // TODO: extend to note and code etc...
   let blockMeta: BlockMeta | null = null

@@ -13,7 +13,6 @@
   "dependencies": {
     "@chat-tutor/canvas": "workspace:*",
     "@chat-tutor/shared": "workspace:*",
-    "@chat-tutor/mermaid": "workspace:*",
     "@dsl/math": "workspace:*",
     "@dsl/knowledge": "workspace:*",
     "@dsl/x": "workspace:*",

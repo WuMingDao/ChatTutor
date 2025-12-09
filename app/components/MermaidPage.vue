@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import mermaid from 'mermaid'
-import type { MermaidPage } from '~~/packages/mermaid/src'
+import type { MermaidPage } from '@chat-tutor/agent'
 
 onMounted(() => {
   mermaid.initialize({
@@ -14,17 +14,19 @@ const props = defineProps<{
 }>()
 
 const content = ref('')
+let renderId = 0
 watch(() => props.page.steps, (steps) => {
   console.log('steps', steps)
   for (const step of steps) {
     if (step.type === 'set-mermaid') {
       const source = step.options.content.trim()
-      mermaid.render('mermaid-container', source).then((result) => {
+      const id = `mermaid-${props.page.id}-${renderId++}`
+      mermaid.render(id, source).then((result) => {
         content.value = result.svg
       })
     }
   }
-}, { immediate: true })
+}, { immediate: true, deep: true })
 </script>
 
 <template>

@@ -47,14 +47,6 @@ export const createAgent = (options: AgentOptions) => {
       emit: (action) => chunker(action),
       emitText: emitText,
     })
-
-    const tools = (await Promise.all([
-      getAgentTools({
-        pages: options.pages,
-        painterOptions: options.painter,
-        chunker,
-      }),
-    ])).flat()
     options.messages.push(message.user(
       [message.textPart(input), ...(images ?? []).map(i => message.imagePart(i))]
     ))
@@ -63,7 +55,7 @@ export const createAgent = (options: AgentOptions) => {
       apiKey: options.apiKey,
       baseURL: options.baseURL,
       messages: options.messages,
-      tools,
+      // tools,
       maxSteps: 15,
     })
     messages.then(ms => {
@@ -87,3 +79,4 @@ export * from './tools'
 export * from './painter'
 export * from './types'
 export * from './title'
+export * from './utils'
