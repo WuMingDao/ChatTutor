@@ -7,6 +7,8 @@ import type {
   MermaidEndAction,
   GGBStartAction,
   GGBEndAction,
+  PlanStartAction,
+  PlanEndAction,
 } from '@chat-tutor/agent'
 import type { MermaidPage } from './mermaid'
 import { mermaidBlockResolver } from './mermaid'
@@ -36,6 +38,10 @@ const fenceStart = '```'
 const blockStart = /^```\s*(mermaid|note|ggbscript|geogebra)\s*\[([^\]\s|;]+)(?:;([^\]]+))?\](?:\|([^\n`]+))?[\t ]*(?:\r?\n)?/m
 const blockEnd = /^```[\t ]*(?:\r?\n)?/
 
+// Plan tag patterns
+const planStartTag = '<plan>'
+const planEndTag = '</plan>'
+
 export const createBlockParser = ({ pages, emit, emitText }: BlockParserOptions) => {
   const blockResolvers = new Map<string, {
     resolver: BlockResolver
@@ -61,7 +67,7 @@ export const createBlockParser = ({ pages, emit, emitText }: BlockParserOptions)
   let buffer = ''
   // TODO: extend to note and code etc...
   let blockMeta: BlockMeta | null = null
-  type State = 'idle' | 'await_head' | 'in_block'
+  type State = 'idle' | 'await_head' | 'in_block' | 'in_plan'
   let state: State = 'idle'
   
   const flushPlainText = () => {
@@ -76,37 +82,65 @@ export const createBlockParser = ({ pages, emit, emitText }: BlockParserOptions)
     if (state === 'idle') {
       if (buffer.endsWith('``')) keepLen = 2
       else if (buffer.endsWith('`')) keepLen = 1
+      // Also check for partial <plan or </plan tags
+      else if (buffer.endsWith('<plan')) keepLen = 5
+      else if (buffer.endsWith('<pla')) keepLen = 4
+      else if (buffer.endsWith('<pl')) keepLen = 3
+      else if (buffer.endsWith('<p')) keepLen = 2
+      else if (buffer.endsWith('<')) keepLen = 1
     }
 
     const textToEmit = buffer.slice(0, buffer.length - keepLen)
     const keptText = buffer.slice(buffer.length - keepLen)
 
     if (textToEmit.length > 0) {
-      // Don't trim here, let emitText handle it or preserve spaces
-      // Original was: const trimmedText = buffer.trim(); emitText(trimmedText)
-      // We'll preserve original behavior of calling emitText, but pass non-trimmed 
-      // if we want to fix space eating, but here we just pass the text slice.
-      // The original code did trim(), which might be why spaces are lost.
-      // Let's pass it as is for now, but check validity.
-      // If original intent was to ignore empty whitespace chunks, we can check trim().length
-
-      // However, if we split "Hello world" into "Hello " and "world", 
-      // trimming "Hello " -> "Hello" is bad.
-      // So we should NOT trim if we want to support streaming correctly.
-      // But emitText implementation in index.ts trims it anyway. 
-      // So changing it here won't fix index.ts behavior, but it's a start.
-
       if (textToEmit.trim().length > 0) {
         emitText(textToEmit)
-      } else {
-        // If it's just whitespace? 
-        // If buffer is " ", and we don't emit it, we lose space.
-        // But emitText checks trimmed length > 0.
-        // So whitespace-only chunks are ignored by emitText anyway.
-        // We can't fix that here without changing index.ts.
       }
     }
     buffer = keptText
+  }
+
+  // Try to parse plan tags
+  const tryParsePlan = (): boolean => {
+    // Check for <plan> start tag
+    const planStartIdx = buffer.indexOf(planStartTag)
+    if (planStartIdx !== -1 && state === 'idle') {
+      // Emit text before plan tag
+      if (planStartIdx > 0) {
+        const textBefore = buffer.slice(0, planStartIdx)
+        if (textBefore.trim().length > 0) {
+          emitText(textBefore)
+        }
+      }
+      // Remove the <plan> tag from buffer
+      buffer = buffer.slice(planStartIdx + planStartTag.length)
+      state = 'in_plan'
+      // Emit plan-start action
+      emit({
+        type: 'plan-start',
+        options: {},
+      } as PlanStartAction)
+      return true
+    }
+
+    // Check for </plan> end tag when in plan state
+    if (state === 'in_plan') {
+      const planEndIdx = buffer.indexOf(planEndTag)
+      if (planEndIdx !== -1) {
+        // Discard content inside plan (we don't need to display it)
+        buffer = buffer.slice(planEndIdx + planEndTag.length)
+        state = 'idle'
+        // Emit plan-end action
+        emit({
+          type: 'plan-end',
+          options: {},
+        } as PlanEndAction)
+        return true
+      }
+    }
+
+    return false
   }
 
   // Check if page exists, if not create it
@@ -228,6 +262,11 @@ export const createBlockParser = ({ pages, emit, emitText }: BlockParserOptions)
       const [prefix, type, pageId, title] = headMatch
       buffer = buffer.slice(prefix.length)
       blockMeta = { type: type as BlockMeta['type'], page: pageId, title }
+      // Ensure page exists before emitting start action
+      const resolverInfo = blockResolvers.get(type)
+      if (resolverInfo) {
+        ensurePage(pageId, resolverInfo.pageType, title)
+      }
       // Emit start action when block starts
       emitStartAction(type, pageId)
       return
@@ -258,7 +297,12 @@ export const createBlockParser = ({ pages, emit, emitText }: BlockParserOptions)
       // console.log('buffer updated:', buffer)
       while (true) {
         const prev = buffer
-        tryParse()
+        // Try plan parsing first
+        if (tryParsePlan()) continue
+        // Skip regular parsing when inside plan
+        if (state !== 'in_plan') {
+          tryParse()
+        }
         if (buffer === prev) break
       }
       if (state === 'idle') flushPlainText()

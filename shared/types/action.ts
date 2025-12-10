@@ -1,7 +1,7 @@
 import type {
   PageCreationAction,
   PageNoteAction,
-  TextChunkAction,
+  TextChunkAction, 
   MermaidPageAction,
   NoteStartAction,
   NoteEndAction,
@@ -9,6 +9,8 @@ import type {
   MermaidEndAction,
   GGBStartAction,
   GGBEndAction,
+  PlanStartAction,
+  PlanEndAction,
 } from '@chat-tutor/agent'
 import type { FullizeAction } from '@chat-tutor/shared'
 
@@ -23,3 +25,5 @@ export type AllAction =
   | MermaidEndAction
   | GGBStartAction
   | GGBEndAction
+  | PlanStartAction
+  | PlanEndAction

@@ -10,7 +10,7 @@ const page = inject<Ref<string | null>>('page')!
 
 const content = computed(() => {
   if (['assistant', 'user'].includes(message.type)) {
-    return (<AssistantMessage>message).content
+    return (message as AssistantMessage).content
   } else if (message.type === 'draw') {
     return `Painted on ${message.page}`
   } else if (message.type === 'set-mermaid') {
@@ -21,6 +21,8 @@ const content = computed(() => {
     return message.running ? `Running GeoGebra script on ${message.page}...` : `GeoGebra script executed on ${message.page}`
   } else if (message.type === 'page') {
     return `Created ${message.pageType.toUpperCase()} page: ${message.page}`
+  } else if (message.type === 'plan') {
+    return message.running ? 'Planning...' : 'Planning completed'
   }
   return ''
 })

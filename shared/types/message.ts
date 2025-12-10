@@ -34,6 +34,9 @@ export type GGBMessage = {
   type: 'ggb'
   page: string
 }
+export type PlanMessage = {
+  type: 'plan'
+}
 export type Message = (
   UserMessage
   | AssistantMessage
@@ -42,6 +45,7 @@ export type Message = (
   | NoteMessage
   | PageMessage
   | GGBMessage
+  | PlanMessage
 ) & {
   id: string
   running?: boolean
@@ -70,7 +74,13 @@ export const createMessageResolver = (
 
   return (action: AllAction) => {
     if (action.type === 'text') {
-      if (divided) {
+      const messages = get()
+      const lastMessage = messages.at(-1)
+      // Create new assistant message if:
+      // 1. divided is true (after non-text action)
+      // 2. last message is not an assistant type (e.g., user just sent a message)
+      // 3. no messages exist
+      if (divided || !lastMessage || lastMessage.type !== 'assistant') {
         push({
           type: 'assistant',
           content: '',
@@ -79,8 +89,8 @@ export const createMessageResolver = (
         })
         divided = false
       }
-      const messages = get()
-        ; (<AssistantMessage>messages.at(-1)!).content += action.options.chunk
+      const updatedMessages = get()
+        ; (<AssistantMessage>updatedMessages.at(-1)!).content += action.options.chunk
     } else {
       divided = true
       if (action.type === 'note') {
@@ -187,6 +197,26 @@ export const createMessageResolver = (
         if (message) {
           message.running = false
           runningMessages.delete(`ggb:${pageId}`)
+        }
+      } else if (action.type === 'plan-start') {
+        const messageId = uuid()
+        const message: Message = {
+          type: 'plan',
+          id: messageId,
+          running: true,
+        }
+        runningMessages.set('plan', message)
+        push(message)
+      } else if (action.type === 'plan-end') {
+        // Find the running plan message
+        const messages = get()
+        for (let i = messages.length - 1; i >= 0; i--) {
+          const msg = messages[i]
+          if (msg && msg.type === 'plan' && msg.running === true) {
+            msg.running = false
+            runningMessages.delete('plan')
+            break
+          }
         }
       }
     }
